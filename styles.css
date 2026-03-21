@@ -788,22 +788,112 @@ body::after {
 }
 
 .event-card {
+  display: grid;
+  gap: 18px;
   border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at top right, rgba(201, 171, 114, 0.18), transparent 28%),
+    linear-gradient(180deg, rgba(255, 252, 246, 0.98), rgba(246, 237, 224, 0.92));
+}
+
+.event-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.event-card__type {
+  margin: 0;
+}
+
+.event-card__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 14px;
+  border: 1px solid rgba(141, 108, 61, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 250, 242, 0.86);
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.event-card__date-block {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 18px;
+  border: 1px solid rgba(141, 108, 61, 0.14);
+  border-radius: calc(var(--radius-lg) - 4px);
+  background: rgba(255, 248, 239, 0.84);
+}
+
+.event-card__day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 78px;
+  min-height: 78px;
+  padding: 8px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #8d6c3d, #c59757);
+  color: #fff8ef;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.3rem, 5vw, 3.1rem);
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 18px 36px rgba(141, 108, 61, 0.18);
 }
 
 .event-card h3 {
-  font-size: clamp(1.9rem, 3vw, 2.5rem);
-  margin-bottom: 10px;
+  font-size: clamp(1.85rem, 3vw, 2.35rem);
+  margin-bottom: 4px;
+  line-height: 1.02;
+}
+
+.event-card__month {
+  margin: 0;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+.event-card__info-list {
+  display: grid;
+  gap: 12px;
+}
+
+.event-card__info {
+  padding: 14px 16px;
+  border-left: 3px solid rgba(141, 108, 61, 0.26);
+  border-radius: 0 16px 16px 0;
+  background: rgba(255, 251, 245, 0.76);
+}
+
+.event-card__info-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--accent);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .event-card__time {
-  margin-top: 0;
+  margin: 0;
   color: var(--accent);
   font-weight: 600;
 }
 
 .event-card p {
-  margin-bottom: 10px;
+  margin: 0;
   color: var(--muted);
   line-height: 1.75;
 }
@@ -957,6 +1047,10 @@ body::after {
     width: 100%;
     min-width: 0;
   }
+
+  .event-card__date-block {
+    padding: 16px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1044,6 +1138,25 @@ body::after {
   .event-card__type,
   .gift-account__bank {
     letter-spacing: 0.12em;
+  }
+
+  .event-card__head,
+  .event-card__date-block {
+    grid-template-columns: 1fr;
+  }
+
+  .event-card__head {
+    justify-items: start;
+  }
+
+  .event-card__day {
+    min-width: 64px;
+    min-height: 64px;
+    border-radius: 18px;
+  }
+
+  .event-card__pill {
+    justify-self: start;
   }
 
   .gift-account__number {
