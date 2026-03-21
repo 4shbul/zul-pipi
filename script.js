@@ -25,11 +25,16 @@ const countdownNote = document.getElementById("countdown-note");
 const recipientName = document.getElementById("recipient-name");
 const copyButtons = document.querySelectorAll("[data-copy]");
 const backgroundAudio = document.getElementById("background-audio");
+const scrollProgressBar = document.getElementById("scroll-progress-bar");
+const parallaxElements = document.querySelectorAll("[data-parallax]");
+const tiltElements = document.querySelectorAll("[data-tilt]");
+const rippleElements = document.querySelectorAll("[data-ripple]");
 
 const weddingDate = new Date(countdownRoot.dataset.date);
 const revealDelayMs = 700;
 const backgroundMusicUrl =
-  "https://www.youtube-nocookie.com/embed/ZeFpigRaXbI?autoplay=1&loop=1&playlist=ZeFpigRaXbI&controls=0&modestbranding=1&rel=0";
+  "https://www.youtube.com/embed/ZeFpigRaXbI?autoplay=1&loop=1&playlist=ZeFpigRaXbI&controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1";
+let invitationOpened = false;
 
 const formatValue = (value) => String(value).padStart(2, "0");
 
@@ -89,6 +94,81 @@ const updateCountdown = () => {
   countdownRoot.querySelector('[data-unit="seconds"]').textContent = formatValue(seconds);
 };
 
+const updateScrollProgress = () => {
+  if (!scrollProgressBar) {
+    return;
+  }
+
+  const scrollTop = window.scrollY;
+  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = maxScroll > 0 ? (scrollTop / maxScroll) * 100 : 0;
+
+  scrollProgressBar.style.width = `${Math.min(progress, 100)}%`;
+};
+
+const attachParallax = (element) => {
+  const reset = () => {
+    element.style.transform = "";
+  };
+
+  element.addEventListener("pointermove", (event) => {
+    if (window.innerWidth <= 820) {
+      return;
+    }
+
+    const rect = element.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    const rotateX = y * -8;
+    const rotateY = x * 10;
+
+    element.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translate3d(${(x * 8).toFixed(2)}px, ${(y * 8).toFixed(2)}px, 0)`;
+  });
+
+  element.addEventListener("pointerleave", reset);
+  element.addEventListener("pointercancel", reset);
+};
+
+const attachTilt = (element) => {
+  const reset = () => {
+    element.style.transform = "";
+  };
+
+  element.addEventListener("pointermove", (event) => {
+    if (window.innerWidth <= 920) {
+      return;
+    }
+
+    const rect = element.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    const rotateX = y * -7;
+    const rotateY = x * 7;
+
+    element.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-4px)`;
+  });
+
+  element.addEventListener("pointerleave", reset);
+  element.addEventListener("pointercancel", reset);
+};
+
+const attachRipple = (element) => {
+  element.addEventListener("pointerdown", (event) => {
+    const rect = element.getBoundingClientRect();
+    const ripple = document.createElement("span");
+
+    ripple.className = "ripple";
+    ripple.style.left = `${event.clientX - rect.left}px`;
+    ripple.style.top = `${event.clientY - rect.top}px`;
+
+    element.appendChild(ripple);
+
+    window.setTimeout(() => {
+      ripple.remove();
+    }, 700);
+  });
+};
+
 const startMusic = () => {
   if (!backgroundAudio || backgroundAudio.src) {
     return;
@@ -97,7 +177,12 @@ const startMusic = () => {
   backgroundAudio.src = backgroundMusicUrl;
 };
 
-openInvitationButton.addEventListener("click", () => {
+const openInvitation = () => {
+  if (invitationOpened) {
+    return;
+  }
+
+  invitationOpened = true;
   body.classList.remove("is-locked");
   openingScreen.classList.add("is-hidden");
   openingScreen.setAttribute("aria-hidden", "true");
@@ -107,7 +192,16 @@ openInvitationButton.addEventListener("click", () => {
   window.setTimeout(() => {
     openingScreen.style.display = "none";
   }, revealDelayMs);
-});
+};
+
+openInvitationButton.addEventListener("click", openInvitation, { once: true });
+openInvitationButton.addEventListener("touchend", openInvitation, { once: true });
+
+parallaxElements.forEach(attachParallax);
+tiltElements.forEach(attachTilt);
+rippleElements.forEach(attachRipple);
+window.addEventListener("scroll", updateScrollProgress, { passive: true });
+window.addEventListener("resize", updateScrollProgress);
 
 copyButtons.forEach((button) => {
   button.addEventListener("click", async () => {
@@ -136,4 +230,5 @@ copyButtons.forEach((button) => {
 
 formatRecipient();
 updateCountdown();
+updateScrollProgress();
 window.setInterval(updateCountdown, 1000);
