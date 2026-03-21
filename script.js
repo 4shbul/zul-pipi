@@ -20,7 +20,6 @@ document.querySelectorAll(".reveal").forEach((element) => {
 const body = document.body;
 const openingScreen = document.getElementById("opening-screen");
 const openInvitationButton = document.getElementById("open-invitation");
-const musicToggleButton = document.getElementById("music-toggle");
 const countdownRoot = document.getElementById("countdown");
 const countdownNote = document.getElementById("countdown-note");
 const recipientName = document.getElementById("recipient-name");
@@ -147,17 +146,11 @@ const startMusic = async () => {
   playAmbientPattern();
   musicTimer = window.setInterval(playAmbientPattern, 3200);
   musicEnabled = true;
-  musicToggleButton.textContent = "Musik Aktif";
-  musicToggleButton.classList.add("is-active");
-  musicToggleButton.setAttribute("aria-pressed", "true");
 };
 
 const stopMusic = async () => {
   if (!audioContext) {
     musicEnabled = false;
-    musicToggleButton.textContent = "Putar Musik";
-    musicToggleButton.classList.remove("is-active");
-    musicToggleButton.setAttribute("aria-pressed", "false");
     return;
   }
 
@@ -168,9 +161,6 @@ const stopMusic = async () => {
   }
 
   musicEnabled = false;
-  musicToggleButton.textContent = "Putar Musik";
-  musicToggleButton.classList.remove("is-active");
-  musicToggleButton.setAttribute("aria-pressed", "false");
 };
 
 openInvitationButton.addEventListener("click", async () => {
@@ -183,15 +173,6 @@ openInvitationButton.addEventListener("click", async () => {
   window.setTimeout(() => {
     openingScreen.style.display = "none";
   }, revealDelayMs);
-});
-
-musicToggleButton.addEventListener("click", async () => {
-  if (musicEnabled) {
-    await stopMusic();
-    return;
-  }
-
-  await startMusic();
 });
 
 copyButtons.forEach((button) => {

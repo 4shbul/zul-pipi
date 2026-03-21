@@ -152,8 +152,7 @@ body::after {
 }
 
 .opening-screen__button,
-.action-button,
-.music-toggle {
+.action-button {
   appearance: none;
   border: 0;
   border-radius: 999px;
@@ -175,8 +174,7 @@ body::after {
 }
 
 .opening-screen__button:hover,
-.action-button:hover,
-.music-toggle:hover {
+.action-button:hover {
   transform: translateY(-2px);
 }
 
@@ -711,24 +709,6 @@ body::after {
   line-height: 1.8;
 }
 
-.music-toggle {
-  position: fixed;
-  right: 18px;
-  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-  z-index: 15;
-  max-width: calc(100vw - 24px);
-  padding: 14px 18px;
-  color: #fff8ef;
-  font: inherit;
-  font-weight: 700;
-  background: linear-gradient(135deg, #7f5f36, #ad8451);
-  box-shadow: 0 18px 38px rgba(141, 108, 61, 0.26);
-}
-
-.music-toggle.is-active {
-  background: linear-gradient(135deg, #245b44, #2b8c62);
-}
-
 .reveal {
   opacity: 0;
   transform: translateY(28px);
@@ -845,11 +825,6 @@ body::after {
     width: 100%;
     min-width: 0;
   }
-
-  .music-toggle {
-    right: 12px;
-    bottom: 12px;
-  }
 }
 
 @media (max-width: 640px) {
@@ -897,12 +872,6 @@ body::after {
     aspect-ratio: 1 / 1;
   }
 
-  .music-toggle {
-    left: 12px;
-    right: 12px;
-    width: auto;
-    text-align: center;
-  }
 }
 
 @media (max-width: 420px) {
