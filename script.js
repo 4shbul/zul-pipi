@@ -24,14 +24,12 @@ const countdownRoot = document.getElementById("countdown");
 const countdownNote = document.getElementById("countdown-note");
 const recipientName = document.getElementById("recipient-name");
 const copyButtons = document.querySelectorAll("[data-copy]");
+const backgroundAudio = document.getElementById("background-audio");
 
 const weddingDate = new Date(countdownRoot.dataset.date);
 const revealDelayMs = 700;
-
-let audioContext;
-let masterGain;
-let musicTimer;
-let musicEnabled = false;
+const backgroundMusicUrl =
+  "https://www.youtube-nocookie.com/embed/ZeFpigRaXbI?autoplay=1&loop=1&playlist=ZeFpigRaXbI&controls=0&modestbranding=1&rel=0";
 
 const formatValue = (value) => String(value).padStart(2, "0");
 
@@ -91,84 +89,20 @@ const updateCountdown = () => {
   countdownRoot.querySelector('[data-unit="seconds"]').textContent = formatValue(seconds);
 };
 
-const playTone = (frequency, startAt, duration, gainValue) => {
-  const oscillator = audioContext.createOscillator();
-  const gainNode = audioContext.createGain();
-
-  oscillator.type = "triangle";
-  oscillator.frequency.setValueAtTime(frequency, startAt);
-
-  gainNode.gain.setValueAtTime(0.0001, startAt);
-  gainNode.gain.linearRampToValueAtTime(gainValue, startAt + 0.05);
-  gainNode.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
-
-  oscillator.connect(gainNode);
-  gainNode.connect(masterGain);
-
-  oscillator.start(startAt);
-  oscillator.stop(startAt + duration + 0.05);
-};
-
-const playAmbientPattern = () => {
-  if (!audioContext || !masterGain) {
+const startMusic = () => {
+  if (!backgroundAudio || backgroundAudio.src) {
     return;
   }
 
-  const baseTime = audioContext.currentTime + 0.06;
-  const chord = [220, 277.18, 329.63, 440];
-
-  chord.forEach((frequency, index) => {
-    playTone(frequency, baseTime + index * 0.22, 1.8, 0.018);
-  });
-
-  playTone(659.25, baseTime + 0.34, 0.8, 0.012);
+  backgroundAudio.src = backgroundMusicUrl;
 };
 
-const startMusic = async () => {
-  if (!window.AudioContext && !window.webkitAudioContext) {
-    return;
-  }
-
-  if (!audioContext) {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-
-    audioContext = new AudioContextClass();
-    masterGain = audioContext.createGain();
-    masterGain.gain.value = 0.07;
-    masterGain.connect(audioContext.destination);
-  }
-
-  if (audioContext.state === "suspended") {
-    await audioContext.resume();
-  }
-
-  window.clearInterval(musicTimer);
-  playAmbientPattern();
-  musicTimer = window.setInterval(playAmbientPattern, 3200);
-  musicEnabled = true;
-};
-
-const stopMusic = async () => {
-  if (!audioContext) {
-    musicEnabled = false;
-    return;
-  }
-
-  window.clearInterval(musicTimer);
-
-  if (audioContext.state === "running") {
-    await audioContext.suspend();
-  }
-
-  musicEnabled = false;
-};
-
-openInvitationButton.addEventListener("click", async () => {
+openInvitationButton.addEventListener("click", () => {
   body.classList.remove("is-locked");
   openingScreen.classList.add("is-hidden");
   openingScreen.setAttribute("aria-hidden", "true");
 
-  await startMusic();
+  startMusic();
 
   window.setTimeout(() => {
     openingScreen.style.display = "none";
