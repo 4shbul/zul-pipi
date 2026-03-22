@@ -37,6 +37,23 @@
       <h1>Zul &amp; Pipi</h1>
       <p class="opening-screen__date">05 April 2026</p>
       <p class="opening-screen__guest" id="recipient-name">Kepada Bapak/Ibu/Saudara(i)</p>
+      <form class="opening-screen__guest-form" id="guest-form">
+        <label class="opening-screen__guest-label" for="guest-name-input">Masukkan nama tamu</label>
+        <div class="opening-screen__guest-row">
+          <input
+            class="opening-screen__guest-input"
+            id="guest-name-input"
+            name="to"
+            type="text"
+            placeholder="Contoh: Bapak Andi & Keluarga"
+            autocomplete="off"
+          >
+          <button class="opening-screen__guest-apply" type="submit">Terapkan</button>
+        </div>
+        <p class="opening-screen__guest-note">
+          Nama tamu akan langsung tampil di undangan dan tersimpan di link.
+        </p>
+      </form>
       <button class="opening-screen__button" id="open-invitation" type="button">
         Buka Undangan
       </button>

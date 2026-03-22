@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bagikan Undangan | Zul &amp; Pipi</title>
+  <meta
+    name="description"
+    content="Halaman generator pesan WhatsApp untuk membagikan undangan digital Zul dan Pipi."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="share.css">
+</head>
+<body>
+  <main class="share-page">
+    <section class="share-hero">
+      <p class="share-hero__eyebrow">Generator WhatsApp</p>
+      <h1>Bagikan Undangan ke Tamu</h1>
+      <p class="share-hero__lead">
+        Isi nama tamu, atur kata pembuka, lalu salin atau kirim langsung ke WhatsApp.
+      </p>
+    </section>
+
+    <section class="share-layout">
+      <article class="share-card share-form-card">
+        <div class="section-heading">
+          <p class="section-heading__eyebrow">Input Manual</p>
+          <h2>Data Tamu</h2>
+        </div>
+
+        <form id="share-form" class="share-form">
+          <label class="field">
+            <span class="field__label">Nama tamu</span>
+            <input
+              id="guest-name"
+              name="guest-name"
+              type="text"
+              placeholder="Contoh: Bapak Andi & Keluarga"
+              autocomplete="off"
+            >
+          </label>
+
+          <label class="field">
+            <span class="field__label">Kata pembuka</span>
+            <textarea
+              id="message-intro"
+              name="message-intro"
+              rows="9"
+            >Assalamualaikum Warahmatullahi Wabarakatuh.
+
+Tanpa mengurangi rasa hormat, kami mengundang {guest} untuk hadir pada acara pernikahan kami.
+
+Berikut link undangan digitalnya:</textarea>
+          </label>
+
+          <label class="field">
+            <span class="field__label">Link undangan</span>
+            <input id="invite-link" name="invite-link" type="url" readonly>
+          </label>
+
+          <div class="share-actions">
+            <button class="button button--primary" type="submit">Buat Pesan</button>
+            <button class="button button--secondary" id="copy-link" type="button">Salin Link</button>
+          </div>
+        </form>
+      </article>
+
+      <article class="share-card share-preview-card">
+        <div class="section-heading">
+          <p class="section-heading__eyebrow">Pratinjau</p>
+          <h2>Pesan WhatsApp</h2>
+        </div>
+
+        <div class="preview-recipient" id="preview-recipient">Untuk: Bapak/Ibu/Saudara(i)</div>
+        <pre class="message-preview" id="message-preview"></pre>
+
+        <div class="share-actions share-actions--stack">
+          <button class="button button--primary" id="copy-message" type="button">Salin Pesan WhatsApp</button>
+          <a class="button button--whatsapp" id="open-whatsapp" href="#" target="_blank" rel="noreferrer">
+            Buka di WhatsApp
+          </a>
+          <a class="button button--ghost" href="index.html" target="_blank" rel="noreferrer">
+            Lihat Undangan
+          </a>
+        </div>
+
+        <p class="share-note">
+          Jika undangan sudah di-upload ke hosting, link yang dibagikan akan otomatis mengarah ke tamu yang dipilih.
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <script src="share.js"></script>
+</body>
+</html>

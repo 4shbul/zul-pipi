@@ -20,6 +20,8 @@ document.querySelectorAll(".reveal").forEach((element) => {
 const body = document.body;
 const openingScreen = document.getElementById("opening-screen");
 const openInvitationButton = document.getElementById("open-invitation");
+const guestForm = document.getElementById("guest-form");
+const guestNameInput = document.getElementById("guest-name-input");
 const countdownRoot = document.getElementById("countdown");
 const countdownNote = document.getElementById("countdown-note");
 const recipientName = document.getElementById("recipient-name");
@@ -40,8 +42,10 @@ let pendingMusicStart = false;
 let musicRetryArmed = false;
 
 const musicRetryEvents = ["pointerdown", "touchstart", "keydown"];
+const defaultRecipientText = "Kepada Bapak/Ibu/Saudara(i)";
 
 const formatValue = (value) => String(value).padStart(2, "0");
+const normalizeGuestName = (value) => value.replace(/\s+/g, " ").trim();
 
 const fallbackCopyText = (value) => {
   const textarea = document.createElement("textarea");
@@ -63,16 +67,47 @@ const fallbackCopyText = (value) => {
   }
 };
 
+const setRecipientName = (guest) => {
+  const normalizedGuest = normalizeGuestName(guest || "");
+
+  recipientName.textContent = normalizedGuest
+    ? `Kepada Yth. ${normalizedGuest}`
+    : defaultRecipientText;
+
+  if (guestNameInput && guestNameInput.value !== normalizedGuest) {
+    guestNameInput.value = normalizedGuest;
+  }
+};
+
+const syncRecipientUrl = (guest) => {
+  const url = new URL(window.location.href);
+  const normalizedGuest = normalizeGuestName(guest || "");
+
+  if (normalizedGuest) {
+    url.searchParams.set("to", normalizedGuest);
+  } else {
+    url.searchParams.delete("to");
+  }
+
+  window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+};
+
 const formatRecipient = () => {
   const params = new URLSearchParams(window.location.search);
-  const guest = params.get("to");
+  const guest = params.get("to") || "";
 
-  if (!guest) {
-    recipientName.textContent = "Kepada Bapak/Ibu/Saudara(i)";
+  setRecipientName(guest);
+};
+
+const applyGuestName = () => {
+  if (!guestNameInput) {
     return;
   }
 
-  recipientName.textContent = `Kepada Yth. ${guest}`;
+  const guest = normalizeGuestName(guestNameInput.value);
+
+  setRecipientName(guest);
+  syncRecipientUrl(guest);
 };
 
 const updateCountdown = () => {
@@ -343,6 +378,13 @@ copyButtons.forEach((button) => {
     }, 1800);
   });
 });
+
+if (guestForm) {
+  guestForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    applyGuestName();
+  });
+}
 
 formatRecipient();
 updateCountdown();

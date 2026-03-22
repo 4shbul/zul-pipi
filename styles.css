@@ -209,6 +209,84 @@ body::after {
   overflow-wrap: anywhere;
 }
 
+.opening-screen__guest-form {
+  margin: 0 0 20px;
+  padding: 18px;
+  border: 1px solid rgba(255, 247, 235, 0.12);
+  border-radius: 24px;
+  background: rgba(255, 248, 238, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+.opening-screen__guest-label {
+  display: block;
+  margin-bottom: 10px;
+  color: rgba(255, 244, 230, 0.84);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.opening-screen__guest-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.opening-screen__guest-input {
+  width: 100%;
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 244, 230, 0.18);
+  border-radius: 16px;
+  color: #fff8ef;
+  font: inherit;
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+.opening-screen__guest-input::placeholder {
+  color: rgba(255, 244, 230, 0.44);
+}
+
+.opening-screen__guest-input:focus {
+  border-color: rgba(243, 213, 165, 0.58);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 4px rgba(243, 213, 165, 0.08);
+}
+
+.opening-screen__guest-apply {
+  appearance: none;
+  padding: 14px 18px;
+  border: 0;
+  border-radius: 16px;
+  color: #2f2418;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(135deg, #f3d5a5, #ddba7f);
+  box-shadow: 0 12px 28px rgba(221, 186, 127, 0.18);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
+}
+
+.opening-screen__guest-apply:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+.opening-screen__guest-note {
+  margin: 10px 0 0;
+  color: rgba(255, 244, 230, 0.68);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
 .opening-screen__button,
 .action-button {
   appearance: none;
@@ -1049,6 +1127,14 @@ body::after {
   .opening-screen__content,
   .hero__content {
     padding: 28px 16px;
+  }
+
+  .opening-screen__guest-row {
+    grid-template-columns: 1fr;
+  }
+
+  .opening-screen__guest-apply {
+    width: 100%;
   }
 
   .opening-screen__content h1,
