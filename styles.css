@@ -122,6 +122,12 @@ body::after {
   border: 0;
 }
 
+.audio-frame div,
+.audio-frame iframe {
+  width: 2px;
+  height: 2px;
+}
+
 .opening-screen {
   position: fixed;
   inset: 0;

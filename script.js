@@ -32,9 +32,14 @@ const rippleElements = document.querySelectorAll("[data-ripple]");
 
 const weddingDate = new Date(countdownRoot.dataset.date);
 const revealDelayMs = 700;
-const backgroundMusicUrl =
-  "https://www.youtube.com/embed/ZeFpigRaXbI?autoplay=1&loop=1&playlist=ZeFpigRaXbI&controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1";
+const youtubeVideoId = "ZeFpigRaXbI";
 let invitationOpened = false;
+let youtubePlayer;
+let youtubeReady = false;
+let pendingMusicStart = false;
+let musicRetryArmed = false;
+
+const musicRetryEvents = ["pointerdown", "touchstart", "keydown"];
 
 const formatValue = (value) => String(value).padStart(2, "0");
 
@@ -169,12 +174,122 @@ const attachRipple = (element) => {
   });
 };
 
-const startMusic = () => {
-  if (!backgroundAudio || backgroundAudio.src) {
+const removeMusicRetryListeners = () => {
+  if (!musicRetryArmed) {
     return;
   }
 
-  backgroundAudio.src = backgroundMusicUrl;
+  musicRetryEvents.forEach((eventName) => {
+    document.removeEventListener(eventName, startMusic, true);
+  });
+
+  musicRetryArmed = false;
+};
+
+const armMusicRetry = () => {
+  if (musicRetryArmed) {
+    return;
+  }
+
+  musicRetryEvents.forEach((eventName) => {
+    document.addEventListener(eventName, startMusic, true);
+  });
+
+  musicRetryArmed = true;
+};
+
+const primeMutedPlayback = () => {
+  if (!youtubePlayer || !youtubeReady) {
+    return;
+  }
+
+  try {
+    youtubePlayer.mute();
+    youtubePlayer.playVideo();
+  } catch (error) {
+    // Ignore player errors caused by browser autoplay rules.
+  }
+};
+
+const createYouTubePlayer = () => {
+  if (!backgroundAudio || youtubePlayer || !window.YT?.Player) {
+    return;
+  }
+
+  youtubePlayer = new window.YT.Player("background-audio", {
+    videoId: youtubeVideoId,
+    playerVars: {
+      autoplay: 1,
+      controls: 0,
+      disablekb: 1,
+      fs: 0,
+      loop: 1,
+      modestbranding: 1,
+      mute: 1,
+      playlist: youtubeVideoId,
+      playsinline: 1,
+      rel: 0,
+    },
+    events: {
+      onReady: () => {
+        youtubeReady = true;
+        primeMutedPlayback();
+
+        if (pendingMusicStart) {
+          startMusic();
+        }
+      },
+      onStateChange: (event) => {
+        if (event.data === window.YT.PlayerState.PLAYING && pendingMusicStart) {
+          removeMusicRetryListeners();
+        }
+      },
+    },
+  });
+};
+
+const loadYouTubeAPI = () => {
+  if (window.YT?.Player) {
+    createYouTubePlayer();
+    return;
+  }
+
+  if (document.getElementById("youtube-iframe-api")) {
+    return;
+  }
+
+  const script = document.createElement("script");
+
+  script.id = "youtube-iframe-api";
+  script.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(script);
+
+  window.onYouTubeIframeAPIReady = () => {
+    createYouTubePlayer();
+  };
+};
+
+const startMusic = () => {
+  pendingMusicStart = true;
+
+  if (!youtubePlayer || !youtubeReady) {
+    armMusicRetry();
+    return;
+  }
+
+  try {
+    youtubePlayer.unMute();
+    youtubePlayer.setVolume(100);
+    youtubePlayer.playVideo();
+
+    if (typeof youtubePlayer.isMuted === "function" && !youtubePlayer.isMuted()) {
+      removeMusicRetryListeners();
+    } else {
+      armMusicRetry();
+    }
+  } catch (error) {
+    armMusicRetry();
+  }
 };
 
 const openInvitation = () => {
@@ -197,6 +312,7 @@ const openInvitation = () => {
 openInvitationButton.addEventListener("click", openInvitation, { once: true });
 openInvitationButton.addEventListener("touchend", openInvitation, { once: true });
 
+loadYouTubeAPI();
 parallaxElements.forEach(attachParallax);
 tiltElements.forEach(attachTilt);
 rippleElements.forEach(attachRipple);
