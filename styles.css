@@ -209,13 +209,6 @@ body::after {
   overflow-wrap: anywhere;
 }
 
-.opening-screen__lead {
-  margin: -8px 0 24px;
-  color: rgba(255, 244, 230, 0.8);
-  font-size: 0.96rem;
-  line-height: 1.8;
-}
-
 .opening-screen__button,
 .action-button {
   appearance: none;

@@ -40,7 +40,7 @@ let pendingMusicStart = false;
 let musicRetryArmed = false;
 
 const musicRetryEvents = ["pointerdown", "touchstart", "keydown"];
-const defaultRecipientText = "Kepada Bapak/Ibu/Saudara(i)";
+const defaultRecipientText = "Bapak/Ibu/Saudara(i)";
 
 const formatValue = (value) => String(value).padStart(2, "0");
 const normalizeGuestName = (value) => value.replace(/\s+/g, " ").trim();
@@ -68,9 +68,7 @@ const fallbackCopyText = (value) => {
 const setRecipientName = (guest) => {
   const normalizedGuest = normalizeGuestName(guest || "");
 
-  recipientName.textContent = normalizedGuest
-    ? `Kepada Yth. ${normalizedGuest}`
-    : defaultRecipientText;
+  recipientName.textContent = normalizedGuest || defaultRecipientText;
 };
 
 const formatRecipient = () => {
